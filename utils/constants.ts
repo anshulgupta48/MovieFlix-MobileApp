@@ -1,0 +1,2 @@
+// <======== Exporting Constants ========>
+export const genresOptions = ['Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy', 'Horror', 'Music', 'Romance', 'Sci-fi', 'Sports', 'Thriller', 'Western'];
