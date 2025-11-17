@@ -88,7 +88,7 @@ const Login = () => {
         </View>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 export default Login;

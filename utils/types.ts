@@ -7,3 +7,8 @@ export type GradientButtonProps = {
 export type GradientViewProps = {
     isActive: boolean,
 };
+
+export type TabsBarIconProps = {
+    focused: boolean,
+    title: string,
+};
