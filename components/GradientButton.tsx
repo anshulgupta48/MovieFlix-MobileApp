@@ -10,7 +10,7 @@ const GradientButton = ({ title, handlePress }: GradientButtonProps) => {
         <Text className='text-deep-void text-[16px] font-dmSans-medium'>{title}</Text>
       </LinearGradient>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 export default GradientButton;

@@ -7,7 +7,7 @@ const Search = () => {
     <SafeAreaView>
       <Text>Search</Text>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 export default Search;

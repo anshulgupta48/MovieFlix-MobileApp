@@ -8,4 +8,5 @@ export const Icons = {
     SavedIconDark: require('@/assets/icons/saved-icon-dark.svg').default,
     ProfileIconWhite: require('@/assets/icons/profile-icon-white.svg').default,
     ProfileIconDark: require('@/assets/icons/profile-icon-dark.svg').default,
+    StarIcon: require('@/assets/icons/star-icon.svg').default,
 };

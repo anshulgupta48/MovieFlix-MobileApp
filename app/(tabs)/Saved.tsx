@@ -7,7 +7,7 @@ const Saved = () => {
     <SafeAreaView>
       <Text>Saved</Text>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 export default Saved;

@@ -7,7 +7,7 @@ const Profile = () => {
     <SafeAreaView>
       <Text>Profile</Text>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 export default Profile;

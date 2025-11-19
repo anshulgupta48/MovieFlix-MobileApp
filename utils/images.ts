@@ -1,5 +1,6 @@
 // <======== Exporting Images ========>
 export const Images = {
+    Logo: require('@/assets/images/logo.svg').default,
     LoginBanner1: require('@/assets/images/login-banner-1.svg').default,
     LoginBanner2: require('@/assets/images/login-banner-2.svg').default,
     LoginBanner3: require('@/assets/images/login-banner-3.svg').default,
@@ -8,4 +9,6 @@ export const Images = {
     LoginBanner6: require('@/assets/images/login-banner-6.svg').default,
     LoginBanner7: require('@/assets/images/login-banner-7.svg').default,
     LoginBanner8: require('@/assets/images/login-banner-8.svg').default,
+    HeroBg: require('@/assets/images/hero-bg.png'),
+    LatestMovieBanner: require('@/assets/images/latest-movie-banner.png'),
 };
