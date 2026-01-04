@@ -1,11 +1,12 @@
 import { genresOptions } from '@/utils/constants';
 import { Images } from '@/utils/images';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Login = () => {
+  const router = useRouter();
   const [activeLoginIndex, setActiveLoginIndex] = useState<number>(0);
   const [selectedGenresOptions, setSelectedGenresOptions] = useState<string[]>(['Action', 'Drama', 'Comedy', 'Thriller', 'Sci-fi']);
 
@@ -19,10 +20,18 @@ const Login = () => {
     }
   };
 
+  const handleNext = () => {
+    if (activeLoginIndex === 0) {
+      setActiveLoginIndex(1);
+    } else {
+      router.push('/(tabs)/Home');
+    }
+  };
+
   return (
     <SafeAreaView className='h-full w-full py-[40px] bg-cosmic-black flex flex-col justify-between gap-[40px]'>
       <View className='w-full flex flex-col items-end gap-[40px]'>
-        <Link href='/' className='text-lunar-glow text-[16px] mr-[20px] font-dmSans-medium'>Skip</Link>
+        <Link href='/(tabs)/Home' className='text-lunar-glow text-[16px] mr-[20px] font-dmSans-medium'>Skip</Link>
 
         {activeLoginIndex === 0 && <View className='h-[374px] w-full flex flex-col gap-[10px]'>
           <View className='w-full flex flex-row justify-center items-center gap-[10px] relative left-[20px]'>
@@ -60,7 +69,7 @@ const Login = () => {
         <Text className='w-[220px] text-lunar-glow text-[20px] text-center font-dmSans-medium'>{activeLoginIndex === 0 ? 'Tell us about your favorite movie genres' : 'Select the genres you like to watch'}</Text>
 
         <View className='w-full flex flex-col items-center gap-[14px]'>
-          <TouchableOpacity activeOpacity={0.8} className='h-[48px] w-[90%] bg-astral-violet rounded-[5px] flex justify-center items-center' onPress={() => setActiveLoginIndex(1)}>
+          <TouchableOpacity activeOpacity={0.8} className='h-[48px] w-[90%] bg-astral-violet rounded-[5px] flex justify-center items-center' onPress={handleNext}>
             <Text className='text-lunar-glow text-[16px] font-dmSans-semibold'>Next</Text>
           </TouchableOpacity>
 
