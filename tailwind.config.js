@@ -9,10 +9,12 @@ module.exports = {
         'cosmic-black': '#030014',
         'astral-violet': '#AB8BFF',
         'slate-mist': '#2F2F3A',
+        'nebula-ink': '#0F0D23',
 
         // Text-Colors
         'deep-void': '#151312',
         'lunar-glow': '#FFFFFF',
+        'silver-haze': '#9CA4AB',
       },
       fontFamily: {
         'dmSans-regular': ['DMSans-Regular'],

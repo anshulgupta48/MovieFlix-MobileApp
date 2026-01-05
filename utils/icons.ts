@@ -4,4 +4,5 @@ export const Icons = {
     SearchIcon: require('@/assets/icons/search-icon.png'),
     SavedIcon: require('@/assets/icons/saved-icon.png'),
     ProfileIcon: require('@/assets/icons/profile-icon.png'),
+    StarIcon: require('@/assets/icons/star-icon.png'),
 };

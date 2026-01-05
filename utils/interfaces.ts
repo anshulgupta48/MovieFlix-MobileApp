@@ -6,3 +6,10 @@ export interface TabsBarIconProps {
     title: string,
     icon: ImageSourcePropType,
 };
+
+export interface LatestMovieCardProps {
+    title: string,
+    banner: ImageSourcePropType,
+    rating: number,
+    genres: string[],
+};
