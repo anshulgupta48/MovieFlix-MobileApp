@@ -24,7 +24,7 @@ const Home = () => {
             scrollEnabled={true}
             horizontal={true}
             renderItem={({ item }) => (
-              <PopularMovieCard title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
+              <PopularMovieCard movieId={item?.movieId} title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
             )}
             contentContainerStyle={{ gap: 10 }}
           />
@@ -39,7 +39,7 @@ const Home = () => {
             keyExtractor={(item) => item?.movieId?.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <LatestMovieCard title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
+              <LatestMovieCard movieId={item?.movieId} title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: 'space-between' }}

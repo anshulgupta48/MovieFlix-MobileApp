@@ -8,6 +8,7 @@ export interface TabsBarIconProps {
 };
 
 export interface LatestMovieCardProps {
+    movieId: number,
     title: string,
     banner: ImageSourcePropType,
     rating: number,

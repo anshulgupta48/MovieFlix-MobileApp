@@ -10,11 +10,14 @@ module.exports = {
         'astral-violet': '#AB8BFF',
         'slate-mist': '#2F2F3A',
         'nebula-ink': '#0F0D23',
+        'midnight-plum': '#221F3D',
 
         // Text-Colors
         'deep-void': '#151312',
         'lunar-glow': '#FFFFFF',
         'silver-haze': '#9CA4AB',
+        'moonlight-gray': '#A8B5DB',
+        'quasar-silver': '#D6C7FF',
       },
       fontFamily: {
         'dmSans-regular': ['DMSans-Regular'],

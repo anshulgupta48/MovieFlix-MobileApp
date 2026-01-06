@@ -34,7 +34,7 @@ const Search = () => {
             keyExtractor={(item) => item?.movieId?.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <LatestMovieCard title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
+              <LatestMovieCard movieId={item?.movieId} title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: 'space-between' }}

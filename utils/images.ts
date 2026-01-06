@@ -21,4 +21,5 @@ export const Images = {
     MovieBanner7: require('@/assets/images/movie-banner-7.png'),
     MovieBanner8: require('@/assets/images/movie-banner-8.png'),
     MovieBanner9: require('@/assets/images/movie-banner-9.png'),
+    MovieBanner10: require('@/assets/images/movie-banner-10.png'),
 };
