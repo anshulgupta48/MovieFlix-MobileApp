@@ -18,6 +18,7 @@ module.exports = {
         'silver-haze': '#9CA4AB',
         'moonlight-gray': '#A8B5DB',
         'quasar-silver': '#D6C7FF',
+        'stellar-rose': '#F75555',
       },
       fontFamily: {
         'dmSans-regular': ['DMSans-Regular'],

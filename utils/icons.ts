@@ -9,4 +9,12 @@ export const Icons = {
     ArrowRightIcon: require('@/assets/icons/arrow-right-icon.png'),
     BookmarkIcon: require('@/assets/icons/bookmark-icon.png'),
     BookmarkFilledIcon: require('@/assets/icons/bookmark-filled-icon.png'),
+    NotificationIcon: require('@/assets/icons/notification-icon.png'),
+    EditIcon: require('@/assets/icons/edit-icon.png'),
+    ChevronRightIcon: require('@/assets/icons/chevron-right-icon.png'),
+    SecurityIcon: require('@/assets/icons/security-icon.png'),
+    LanguageIcon: require('@/assets/icons/language-icon.png'),
+    HelpCenterIcon: require('@/assets/icons/help-center-icon.png'),
+    InviteFriendsIcon: require('@/assets/icons/invite-friends-icon.png'),
+    LogoutIcon: require('@/assets/icons/logout-icon.png'),
 };

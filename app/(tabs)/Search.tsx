@@ -18,7 +18,7 @@ const Search = () => {
       <ScrollView className='h-full w-full'>
         <View className='h-[100px] w-full flex justify-center items-center relative'>
           <Image source={Images.HeroBg} className='absolute left-0 top-0 h-[400px] w-[400px]' />
-          <Image source={Images.Logo} className='h-[43px] w-[59px] relative top-[30px] z-10' />
+          <Image source={Images.Logo} className='h-[43px] w-[59px] relative top-[40px] z-10' />
         </View>
 
         <View className='w-full mt-[70px] px-[16px] pb-[70px] flex flex-col gap-[20px]'>
