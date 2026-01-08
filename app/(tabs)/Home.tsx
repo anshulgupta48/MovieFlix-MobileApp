@@ -1,12 +1,16 @@
 import LatestMovieCard from '@/components/LatestMovieCard';
 import PopularMovieCard from '@/components/PopularMovieCard';
-import { latestMoviesData, popularMoviesData } from '@/utils/constants';
+import { fetchMovies } from '@/services/api';
+import useFetch from '@/services/useFetch';
+import { popularMoviesData } from '@/utils/constants';
 import { Images } from '@/utils/images';
 import React from 'react';
 import { FlatList, Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Home = () => {
+  const { data: latestMoviesData } = useFetch(() => fetchMovies(''));
+
   return (
     <SafeAreaView className='h-full w-full bg-cosmic-black'>
       <ScrollView className='h-full w-full'>
@@ -36,10 +40,10 @@ const Home = () => {
           <FlatList
             data={latestMoviesData}
             numColumns={3}
-            keyExtractor={(item) => item?.movieId?.toString()}
+            keyExtractor={(item) => item?.id?.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <LatestMovieCard movieId={item?.movieId} title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
+              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={`https://image.tmdb.org/t/p/w500${item?.poster_path}`} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0]]} />
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: 'space-between' }}

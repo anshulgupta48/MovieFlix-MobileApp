@@ -4,11 +4,11 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 
-const LatestMovieCard = ({ movieId, title, banner, rating, genres }: LatestMovieCardProps) => {
+const LatestMovieCard = ({ movieId, title, bannerUrl, rating, genres }: LatestMovieCardProps) => {
   return (
     <Link href={{ pathname: '/movie/[movieId]', params: { movieId } }} className='h-[210px] w-[32%]'>
       <View className='h-[210px] w-full flex flex-col gap-[8px]'>
-        <Image source={banner} className='h-[151px] w-full rounded-[4px]' />
+        <Image source={{ uri: bannerUrl }} className='h-[151px] w-full rounded-[4px]' />
 
         <View className='w-full flex flex-col gap-[2px]'>
           <Text className='text-lunar-glow text-[12px] font-dmSans-bold' numberOfLines={1}>{title}</Text>

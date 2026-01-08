@@ -1,13 +1,23 @@
 import LatestMovieCard from '@/components/LatestMovieCard';
-import { latestMoviesData } from '@/utils/constants';
+import { fetchMovies } from '@/services/api';
+import useFetch from '@/services/useFetch';
 import { Icons } from '@/utils/icons';
 import { Images } from '@/utils/images';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, TextInput, TextInputChangeEvent, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Search = () => {
+  const { data: searchMoviesData, reFetch: reFetchSearchMovies } = useFetch(() => fetchMovies(searchInput), false);
   const [searchInput, setSearchInput] = useState<string>('');
+
+  useEffect(() => {
+    const timeoutId = setTimeout(async () => {
+      await reFetchSearchMovies();
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchInput]);
 
   const handleChange = (e: TextInputChangeEvent) => {
     setSearchInput(e.nativeEvent.text);
@@ -29,12 +39,12 @@ const Search = () => {
           </View>
 
           <FlatList
-            data={latestMoviesData}
+            data={searchMoviesData}
             numColumns={3}
-            keyExtractor={(item) => item?.movieId?.toString()}
+            keyExtractor={(item) => item?.id?.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <LatestMovieCard movieId={item?.movieId} title={item?.title} banner={item?.banner} rating={item?.rating} genres={item?.genres} />
+              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={`https://image.tmdb.org/t/p/w500${item?.poster_path}`} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0]]} />
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: 'space-between' }}

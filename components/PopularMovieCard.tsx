@@ -1,10 +1,10 @@
 import { Icons } from '@/utils/icons';
-import { LatestMovieCardProps } from '@/utils/interfaces';
+import { PopularMovieCardProps } from '@/utils/interfaces';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 
-const PopularMovieCard = ({ movieId, banner, title, rating, genres }: LatestMovieCardProps) => {
+const PopularMovieCard = ({ movieId, banner, title, rating, genres }: PopularMovieCardProps) => {
   return (
     <Link href={{ pathname: '/movie/[movieId]', params: { movieId } }}>
       <View className='h-[210px] w-[120px] flex flex-col gap-[8px] relative'>
