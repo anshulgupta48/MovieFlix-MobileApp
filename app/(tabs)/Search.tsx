@@ -1,14 +1,17 @@
 import LatestMovieCard from '@/components/LatestMovieCard';
 import { fetchMovies } from '@/services/api';
+import { localStorage } from '@/services/localStorage';
 import useFetch from '@/services/useFetch';
 import { Icons } from '@/utils/icons';
 import { Images } from '@/utils/images';
+import { MovieData } from '@/utils/interfaces';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, TextInput, TextInputChangeEvent, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, ScrollView, Text, TextInput, TextInputChangeEvent, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Search = () => {
-  const { data: searchMoviesData, reFetch: reFetchSearchMovies } = useFetch(() => fetchMovies(searchInput), false);
+  const { data: searchMoviesData, loading: searchMoviesLoading, error: searchMoviesError, reFetch: reFetchSearchMovies } = useFetch(() => fetchMovies(searchInput), false);
+  const [savedMoviesData, setSavedMoviesData] = useState<MovieData[]>([]);
   const [searchInput, setSearchInput] = useState<string>('');
 
   useEffect(() => {
@@ -19,8 +22,26 @@ const Search = () => {
     return () => clearTimeout(timeoutId);
   }, [searchInput]);
 
+  useEffect(() => {
+    const fetchSavedMovies = async () => {
+      const moviesData: MovieData[] = await localStorage.getItem('savedMovies') || [];
+      setSavedMoviesData(moviesData);
+    };
+    fetchSavedMovies();
+  }, [savedMoviesData]);
+
   const handleChange = (e: TextInputChangeEvent) => {
     setSearchInput(e.nativeEvent.text);
+  };
+
+  const handleToggleIsMovieSaved = async (movieId: number, title: string, bannerUrl: string, rating: number) => {
+    if (savedMoviesData?.some((movie) => movie?.id === movieId)) {
+      const updatedSavedMoviesData = savedMoviesData?.filter((movie) => movie?.id !== movieId) || [];
+      await localStorage.setItem('savedMovies', updatedSavedMoviesData);
+    } else {
+      const updatedSavedMoviesData = [...savedMoviesData, { id: movieId, title, poster_path: bannerUrl, vote_average: rating }];
+      await localStorage.setItem('savedMovies', updatedSavedMoviesData);
+    }
   };
 
   return (
@@ -38,17 +59,20 @@ const Search = () => {
             <TextInput placeholder='Search through 300+ movies online' placeholderTextColor='#A8B5DB' value={searchInput} onChange={(e) => handleChange(e)} className='h-full w-full text-lunar-glow text-[14px] font-dmSans-regular' />
           </View>
 
-          <FlatList
+          {searchMoviesLoading && <ActivityIndicator color='#FFFFFF' className='mt-[100px]' />}
+          {searchMoviesError && <Text className='text-stellar-rose text-[14px] font-dmSans-medium'>Error: {searchMoviesError?.message}</Text>}
+
+          {!(searchMoviesLoading || searchMoviesError) ? (searchMoviesData?.length > 0 ? <FlatList
             data={searchMoviesData}
             numColumns={3}
             keyExtractor={(item) => item?.id?.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={`https://image.tmdb.org/t/p/w500${item?.poster_path}`} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0]]} />
+              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={`https://image.tmdb.org/t/p/w500${item?.poster_path}`} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0]]} isMovieSaved={savedMoviesData?.some((movie) => movie?.id === item?.id)} handleToggleIsMovieSaved={handleToggleIsMovieSaved} />
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: 'space-between' }}
-          />
+          /> : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Search Results Found</Text>) : null}
         </View>
       </ScrollView>
     </SafeAreaView>

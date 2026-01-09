@@ -1,13 +1,31 @@
 import LatestMovieCard from '@/components/LatestMovieCard';
-import { fetchMovies } from '@/services/api';
-import useFetch from '@/services/useFetch';
+import { localStorage } from '@/services/localStorage';
 import { Images } from '@/utils/images';
-import React from 'react';
+import { MovieData } from '@/utils/interfaces';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Saved = () => {
-  const { data: savedMoviesData } = useFetch(() => fetchMovies(''));
+  const [savedMoviesData, setSavedMoviesData] = useState<MovieData[]>([]);
+
+  useEffect(() => {
+    const fetchSavedMovies = async () => {
+      const moviesData: MovieData[] = await localStorage.getItem('savedMovies') || [];
+      setSavedMoviesData(moviesData);
+    };
+    fetchSavedMovies();
+  }, [savedMoviesData]);
+
+  const handleToggleIsMovieSaved = async (movieId: number, title: string, bannerUrl: string, rating: number) => {
+    if (savedMoviesData?.some((movie) => movie?.id === movieId)) {
+      const updatedSavedMoviesData = savedMoviesData?.filter((movie) => movie?.id !== movieId) || [];
+      await localStorage.setItem('savedMovies', updatedSavedMoviesData);
+    } else {
+      const updatedSavedMoviesData = [...savedMoviesData, { id: movieId, title, poster_path: bannerUrl, vote_average: rating }];
+      await localStorage.setItem('savedMovies', updatedSavedMoviesData);
+    }
+  };
 
   return (
     <SafeAreaView className='h-full w-full bg-cosmic-black'>
@@ -20,17 +38,17 @@ const Saved = () => {
         <View className='w-full mt-[70px] px-[16px] pb-[70px] flex flex-col gap-[12px]'>
           <Text className='text-lunar-glow text-[17px] font-dmSans-semibold'>Saved Movies</Text>
 
-          <FlatList
+          {savedMoviesData?.length > 0 ? <FlatList
             data={savedMoviesData}
             numColumns={3}
             keyExtractor={(item) => item?.id?.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={`https://image.tmdb.org/t/p/w500${item?.poster_path}`} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0]]} />
+              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={`https://image.tmdb.org/t/p/w500${item?.poster_path}`} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0] || '2026']} isMovieSaved={savedMoviesData?.some((movie) => movie?.id === item?.id)} handleToggleIsMovieSaved={handleToggleIsMovieSaved} />
             )}
             contentContainerStyle={{ gap: 14 }}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-          />
+            columnWrapperStyle={{ justifyContent: (savedMoviesData?.length % 3 === 2) ? 'flex-start' : 'space-between', gap: (savedMoviesData?.length % 3 === 2) ? 10 : 0 }}
+          /> : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Saved Movies Yet</Text>}
         </View>
       </ScrollView>
     </SafeAreaView>

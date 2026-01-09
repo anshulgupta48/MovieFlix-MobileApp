@@ -21,8 +21,18 @@ export interface LatestMovieCardProps {
     bannerUrl: string,
     rating: number,
     genres: string[],
+    isMovieSaved: boolean,
+    handleToggleIsMovieSaved: (movieId: number, title: string, bannerUrl: string, rating: number) => void;
 };
 
 export interface fetchMoviesProps {
     query: string,
+};
+
+export interface MovieData {
+    id: number;
+    title: string;
+    poster_path: string;
+    vote_average: number;
+    release_date?: string;
 };
