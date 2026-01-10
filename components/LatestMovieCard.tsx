@@ -11,7 +11,7 @@ const LatestMovieCard = ({ movieId, title, bannerUrl, rating, genres, isMovieSav
         <View className='relative'>
           <Image source={{ uri: bannerUrl }} className='h-[151px] w-full rounded-[4px]' />
 
-          <TouchableOpacity activeOpacity={0.8} className='absolute top-[5px] right-[5px] h-[20px] w-[20px] bg-silver-haze/95 rounded-[3px] flex flex-row justify-center items-center gap-[2px] z-10' onPress={() => handleToggleIsMovieSaved(movieId, title, bannerUrl, rating)}>
+          <TouchableOpacity activeOpacity={0.8} className='absolute top-[5px] right-[5px] h-[20px] w-[20px] bg-silver-haze/95 rounded-[3px] flex flex-row justify-center items-center gap-[2px] z-10' onPress={() => handleToggleIsMovieSaved(movieId, title, bannerUrl, rating * 2, genres[genres?.length - 1])}>
             <Image source={isMovieSaved ? Icons.BookmarkFilledIcon : Icons.BookmarkIcon} tintColor='#FFFFFF' className='h-[12px] w-[12px]' />
           </TouchableOpacity>
         </View>

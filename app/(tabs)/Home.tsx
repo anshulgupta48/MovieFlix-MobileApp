@@ -22,12 +22,12 @@ const Home = () => {
     fetchSavedMovies();
   }, [savedMoviesData]);
 
-  const handleToggleIsMovieSaved = async (movieId: number, title: string, bannerUrl: string, rating: number) => {
+  const handleToggleIsMovieSaved = async (movieId: number, title: string, bannerUrl: string, rating: number, release_date: string) => {
     if (savedMoviesData?.some((movie) => movie?.id === movieId)) {
       const updatedSavedMoviesData = savedMoviesData?.filter((movie) => movie?.id !== movieId) || [];
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     } else {
-      const updatedSavedMoviesData = [...savedMoviesData, { id: movieId, title, poster_path: bannerUrl, vote_average: rating }];
+      const updatedSavedMoviesData = [...savedMoviesData, { id: movieId, title, poster_path: bannerUrl, vote_average: rating, release_date }];
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     }
   };

@@ -22,7 +22,7 @@ export interface LatestMovieCardProps {
     rating: number,
     genres: string[],
     isMovieSaved: boolean,
-    handleToggleIsMovieSaved: (movieId: number, title: string, bannerUrl: string, rating: number) => void;
+    handleToggleIsMovieSaved: (movieId: number, title: string, bannerUrl: string, rating: number, release_date: string) => void;
 };
 
 export interface fetchMoviesProps {
