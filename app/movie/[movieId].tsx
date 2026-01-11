@@ -2,7 +2,7 @@ import { fetchMovieDetails } from '@/services/api';
 import { localStorage } from '@/services/localStorage';
 import useFetch from '@/services/useFetch';
 import { Icons } from '@/utils/icons';
-import { MovieData } from '@/utils/interfaces';
+import { LatestMovieData } from '@/utils/interfaces';
 import { Link, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -11,11 +11,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const MovieDetails = () => {
   const params: { movieId: string } = useLocalSearchParams();
   const { data: movieDetailsData, loading: movieDetailsLoading, error: movieDetailsError } = useFetch(() => fetchMovieDetails(params?.movieId));
-  const [savedMoviesData, setSavedMoviesData] = useState<MovieData[]>([]);
+  const [savedMoviesData, setSavedMoviesData] = useState<LatestMovieData[]>([]);
 
   useEffect(() => {
     const fetchSavedMovies = async () => {
-      const moviesData: MovieData[] = await localStorage.getItem('savedMovies') || [];
+      const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
       setSavedMoviesData(moviesData);
     };
     fetchSavedMovies();
@@ -39,7 +39,7 @@ const MovieDetails = () => {
 
         {!(movieDetailsLoading || movieDetailsError) && (<>
           <View className='h-[560px] w-full relative'>
-            <Image source={{ uri: `https://image.tmdb.org/t/p/w500${movieDetailsData?.poster_path}` }} className='h-full w-full' />
+            <Image source={{ uri: movieDetailsData?.poster_path ? `https://image.tmdb.org/t/p/w500${movieDetailsData?.poster_path}` : 'https://images.unsplash.com/photo-1610513320995-1ad4bbf25e55?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }} className='h-full w-full' />
 
             <TouchableOpacity activeOpacity={0.8} className='absolute top-[10px] right-[10px] h-[24px] w-[24px] bg-silver-haze/95 rounded-[3px] flex flex-row justify-center items-center gap-[2px] z-10' onPress={() => handleToggleIsMovieSaved(movieDetailsData?.id, movieDetailsData?.title, `https://image.tmdb.org/t/p/w500${movieDetailsData?.poster_path}`, Math.round(movieDetailsData?.vote_average / 2) * 2 || 0, movieDetailsData?.release_date)}>
               <Image source={savedMoviesData?.some((movie) => movie?.id === movieDetailsData?.id) ? Icons.BookmarkFilledIcon : Icons.BookmarkIcon} tintColor='#FFFFFF' className='h-[14px] w-[14px]' />
@@ -82,7 +82,7 @@ const MovieDetails = () => {
             <View className='w-full flex flex-col gap-[24px]'>
               <View className='flex flex-col gap-[4px]'>
                 <Text className='text-moonlight-gray text-[12px] font-dmSans-regular'>Overview</Text>
-                <Text className='text-lunar-glow text-[14px] font-dmSans-regular'>{movieDetailsData?.overview}</Text>
+                <Text className='text-lunar-glow text-[14px] font-dmSans-regular'>{(movieDetailsData?.overview !== '') ? movieDetailsData?.overview : 'N/A'}</Text>
               </View>
 
               <View className='flex flex-row items-center gap-[32px]'>
@@ -97,7 +97,7 @@ const MovieDetails = () => {
                 </View>
               </View>
 
-              <View className='flex flex-col gap-[8px]'>
+              {(movieDetailsData?.genres?.length > 0) && <View className='flex flex-col gap-[8px]'>
                 <Text className='text-moonlight-gray text-[12px] font-dmSans-regular'>Genres</Text>
 
                 <View className='w-full flex flex-row items-center gap-[9px] flex-wrap'>
@@ -107,9 +107,9 @@ const MovieDetails = () => {
                     </View>
                   ))}
                 </View>
-              </View>
+              </View>}
 
-              <View className='flex flex-col gap-[4px] flex-wrap'>
+              {(movieDetailsData?.production_countries?.length > 0) && <View className='flex flex-col gap-[4px] flex-wrap'>
                 <Text className='text-moonlight-gray text-[12px] font-dmSans-regular'>Countries</Text>
 
                 <View className='w-full flex flex-row gap-[8px]'>
@@ -120,7 +120,7 @@ const MovieDetails = () => {
                     </View>
                   ))}
                 </View>
-              </View>
+              </View>}
 
               <View className='flex flex-row items-center gap-[32px]'>
                 <View className='flex flex-col gap-[4px]'>
@@ -136,10 +136,10 @@ const MovieDetails = () => {
 
               <View className='flex flex-col gap-[4px]'>
                 <Text className='text-moonlight-gray text-[12px] font-dmSans-regular'>Tagline</Text>
-                <Text className='text-lunar-glow text-[14px] font-dmSans-semibold'>{movieDetailsData?.tagline}</Text>
+                <Text className='text-lunar-glow text-[14px] font-dmSans-semibold'>{(movieDetailsData?.tagline !== '') ? movieDetailsData?.tagline : 'N/A'}</Text>
               </View>
 
-              <View className='flex flex-col gap-[4px]'>
+              {(movieDetailsData?.production_companies?.length > 0) && <View className='flex flex-col gap-[4px]'>
                 <Text className='text-moonlight-gray text-[12px] font-dmSans-regular'>Production Companies</Text>
 
                 <View className='w-full flex flex-row gap-[8px] flex-wrap'>
@@ -150,7 +150,7 @@ const MovieDetails = () => {
                     </View>
                   ))}
                 </View>
-              </View>
+              </View>}
 
               <Link href='/(tabs)/Home' asChild>
                 <TouchableOpacity activeOpacity={0.8} className='h-[36px] w-full bg-astral-violet rounded-[4px] flex flex-row justify-center items-center gap-[4px]'>

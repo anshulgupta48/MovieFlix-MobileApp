@@ -9,8 +9,9 @@ export interface TabsBarIconProps {
 
 export interface PopularMovieCardProps {
     movieId: number,
+    movieIndex: number,
     title: string,
-    banner: ImageSourcePropType,
+    bannerUrl: string,
     rating: number,
     genres: string[],
 };
@@ -25,11 +26,19 @@ export interface LatestMovieCardProps {
     handleToggleIsMovieSaved: (movieId: number, title: string, bannerUrl: string, rating: number, release_date: string) => void;
 };
 
-export interface fetchMoviesProps {
+export interface fetchLatestMoviesProps {
     query: string,
 };
 
-export interface MovieData {
+export interface PopularMoviesData {
+    movieId: number,
+    title: string,
+    bannerUrl: string,
+    rating: number,
+    genres: string[],
+};
+
+export interface LatestMovieData {
     id: number;
     title: string;
     poster_path: string;

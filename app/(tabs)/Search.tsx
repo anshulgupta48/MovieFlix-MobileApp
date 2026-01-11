@@ -1,17 +1,18 @@
 import LatestMovieCard from '@/components/LatestMovieCard';
-import { fetchMovies } from '@/services/api';
+import { fetchLatestMovies } from '@/services/api';
+import { updateSearchCount } from '@/services/appwrite';
 import { localStorage } from '@/services/localStorage';
 import useFetch from '@/services/useFetch';
 import { Icons } from '@/utils/icons';
 import { Images } from '@/utils/images';
-import { MovieData } from '@/utils/interfaces';
+import { LatestMovieData } from '@/utils/interfaces';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ScrollView, Text, TextInput, TextInputChangeEvent, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Search = () => {
-  const { data: searchMoviesData, loading: searchMoviesLoading, error: searchMoviesError, reFetch: reFetchSearchMovies } = useFetch(() => fetchMovies(searchInput), false);
-  const [savedMoviesData, setSavedMoviesData] = useState<MovieData[]>([]);
+  const { data: searchMoviesData, loading: searchMoviesLoading, error: searchMoviesError, reFetch: reFetchSearchMovies } = useFetch(() => fetchLatestMovies(searchInput), false);
+  const [savedMoviesData, setSavedMoviesData] = useState<LatestMovieData[]>([]);
   const [searchInput, setSearchInput] = useState<string>('');
 
   useEffect(() => {
@@ -23,8 +24,14 @@ const Search = () => {
   }, [searchInput]);
 
   useEffect(() => {
+    if ((searchInput !== '') && searchMoviesData?.length > 0) {
+      updateSearchCount(searchMoviesData[0]?.id, searchMoviesData[0]?.title, (searchMoviesData[0]?.poster_path ? `https://image.tmdb.org/t/p/w500${searchMoviesData[0]?.poster_path}` : 'https://images.unsplash.com/photo-1610513320995-1ad4bbf25e55?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'), (Math.round(searchMoviesData[0]?.vote_average / 2) || 0), (['Movie', searchMoviesData[0]?.release_date?.split('-')[0]]), searchInput);
+    }
+  }, [searchMoviesData]);
+
+  useEffect(() => {
     const fetchSavedMovies = async () => {
-      const moviesData: MovieData[] = await localStorage.getItem('savedMovies') || [];
+      const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
       setSavedMoviesData(moviesData);
     };
     fetchSavedMovies();
@@ -68,10 +75,10 @@ const Search = () => {
             keyExtractor={(item) => item?.id?.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={`https://image.tmdb.org/t/p/w500${item?.poster_path}`} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0]]} isMovieSaved={savedMoviesData?.some((movie) => movie?.id === item?.id)} handleToggleIsMovieSaved={handleToggleIsMovieSaved} />
+              <LatestMovieCard movieId={item?.id} title={item?.title} bannerUrl={item?.poster_path ? `https://image.tmdb.org/t/p/w500${item?.poster_path}` : 'https://images.unsplash.com/photo-1610513320995-1ad4bbf25e55?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} rating={Math.round(item?.vote_average / 2) || 0} genres={['Movie', item?.release_date?.split('-')[0]]} isMovieSaved={savedMoviesData?.some((movie) => movie?.id === item?.id)} handleToggleIsMovieSaved={handleToggleIsMovieSaved} />
             )}
             contentContainerStyle={{ gap: 14 }}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
+            columnWrapperStyle={{ justifyContent: (searchMoviesData?.length % 3 === 2) ? 'flex-start' : 'space-between', gap: (searchMoviesData?.length % 3 === 2) ? 7 : 0 }}
           /> : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Search Results Found</Text>) : null}
         </View>
       </ScrollView>

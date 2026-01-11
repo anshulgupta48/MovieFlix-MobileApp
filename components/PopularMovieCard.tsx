@@ -1,14 +1,26 @@
 import { Icons } from '@/utils/icons';
 import { PopularMovieCardProps } from '@/utils/interfaces';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 
-const PopularMovieCard = ({ movieId, banner, title, rating, genres }: PopularMovieCardProps) => {
+const PopularMovieCard = ({ movieId, movieIndex, bannerUrl, title, rating, genres }: PopularMovieCardProps) => {
   return (
     <Link href={{ pathname: '/movie/[movieId]', params: { movieId } }}>
       <View className='h-[210px] w-[120px] flex flex-col gap-[8px] relative'>
-        <Image source={banner} className='h-[167px] w-full rounded-[4px]' />
+        <View className='h-[167px] w-full'>
+          <Image source={{ uri: bannerUrl }} className='h-full w-full rounded-[4px]' />
+
+          <View className='relative right-[10px] bottom-[43px]'>
+            <MaskedView maskElement={
+              <Text className='text-[44px] text-lunar-glow font-dmSans-semibold'>{movieIndex + 1}</Text>
+            }>
+              <View className='h-full w-full bg-moonlight-gray'></View>
+            </MaskedView>
+          </View>
+        </View>
+
         <View className='absolute top-[5px] right-[5px] h-[16px] w-[30px] bg-silver-haze/95 rounded-[3px] flex flex-row justify-center items-center gap-[2px] z-10'>
           <Image source={Icons.StarIcon} tintColor='#FFCD1A' className='h-[8px] w-[8px]' />
           <Text className='text-lunar-glow text-[8px] font-dmSans-semibold'>{rating}</Text>

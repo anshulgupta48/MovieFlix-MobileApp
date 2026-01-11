@@ -1,8 +1,8 @@
-import { MovieData } from '@/utils/interfaces';
+import { LatestMovieData } from '@/utils/interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const localStorage = {
-    setItem: async (key: string, value: MovieData[]) => {
+    setItem: async (key: string, value: LatestMovieData[]) => {
         AsyncStorage.setItem(key, JSON.stringify(value));
     },
     getItem: async <T>(key: string): Promise<T | null> => {
