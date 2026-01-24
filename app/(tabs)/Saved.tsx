@@ -2,27 +2,35 @@ import LatestMovieCard from '@/components/LatestMovieCard';
 import { localStorage } from '@/services/localStorage';
 import { Images } from '@/utils/images';
 import { LatestMovieData } from '@/utils/interfaces';
-import React, { useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, Text, View } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Saved = () => {
   const [savedMoviesData, setSavedMoviesData] = useState<LatestMovieData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const fetchSavedMovies = async () => {
-      const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
-      setSavedMoviesData(moviesData);
-    };
-    fetchSavedMovies();
-  }, [savedMoviesData]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchSavedMovies = async () => {
+        setLoading(true);
+        const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
+        setSavedMoviesData(moviesData);
+        setLoading(false);
+      };
+      fetchSavedMovies();
+    }, [])
+  );
 
   const handleToggleIsMovieSaved = async (movieId: number, title: string, bannerUrl: string, rating: number, release_date: string) => {
     if (savedMoviesData?.some((movie) => movie?.id === movieId)) {
       const updatedSavedMoviesData = savedMoviesData?.filter((movie) => movie?.id !== movieId) || [];
+      setSavedMoviesData(updatedSavedMoviesData);
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     } else {
       const updatedSavedMoviesData = [...savedMoviesData, { id: movieId, title, poster_path: bannerUrl, vote_average: rating, release_date }];
+      setSavedMoviesData(updatedSavedMoviesData);
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     }
   };
@@ -37,8 +45,9 @@ const Saved = () => {
 
         <View className='w-full mt-[70px] px-[16px] pb-[70px] flex flex-col gap-[12px]'>
           <Text className='text-lunar-glow text-[17px] font-dmSans-semibold'>Saved Movies</Text>
+          {loading && <ActivityIndicator color='#FFFFFF' className='mt-[40px]' />}
 
-          {savedMoviesData?.length > 0 ? <FlatList
+          {!(loading) && (savedMoviesData?.length > 0 ? <FlatList
             data={savedMoviesData}
             numColumns={3}
             keyExtractor={(item) => item?.id?.toString()}
@@ -48,7 +57,7 @@ const Saved = () => {
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: (savedMoviesData?.length % 3 === 2) ? 'flex-start' : 'space-between', gap: (savedMoviesData?.length % 3 === 2) ? 7 : 0 }}
-          /> : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Saved Movies Yet</Text>}
+          /> : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Saved Movies Yet</Text>)}
         </View>
       </ScrollView>
     </SafeAreaView>

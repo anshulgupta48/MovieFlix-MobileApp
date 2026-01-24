@@ -6,7 +6,8 @@ import useFetch from '@/services/useFetch';
 import { Icons } from '@/utils/icons';
 import { Images } from '@/utils/images';
 import { LatestMovieData } from '@/utils/interfaces';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ScrollView, Text, TextInput, TextInputChangeEvent, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -29,13 +30,15 @@ const Search = () => {
     }
   }, [searchMoviesData]);
 
-  useEffect(() => {
-    const fetchSavedMovies = async () => {
-      const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
-      setSavedMoviesData(moviesData);
-    };
-    fetchSavedMovies();
-  }, [savedMoviesData]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchSavedMovies = async () => {
+        const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
+        setSavedMoviesData(moviesData);
+      };
+      fetchSavedMovies();
+    }, [])
+  );
 
   const handleChange = (e: TextInputChangeEvent) => {
     setSearchInput(e.nativeEvent.text);
@@ -44,9 +47,11 @@ const Search = () => {
   const handleToggleIsMovieSaved = async (movieId: number, title: string, bannerUrl: string, rating: number, release_date: string) => {
     if (savedMoviesData?.some((movie) => movie?.id === movieId)) {
       const updatedSavedMoviesData = savedMoviesData?.filter((movie) => movie?.id !== movieId) || [];
+      setSavedMoviesData(updatedSavedMoviesData);
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     } else {
       const updatedSavedMoviesData = [...savedMoviesData, { id: movieId, title, poster_path: bannerUrl, vote_average: rating, release_date }];
+      setSavedMoviesData(updatedSavedMoviesData);
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     }
   };
@@ -69,7 +74,7 @@ const Search = () => {
           {searchMoviesLoading && <ActivityIndicator color='#FFFFFF' className='mt-[100px]' />}
           {searchMoviesError && <Text className='text-stellar-rose text-[14px] font-dmSans-medium'>Error: {searchMoviesError?.message}</Text>}
 
-          {!(searchMoviesLoading || searchMoviesError) ? (searchMoviesData?.length > 0 ? <FlatList
+          {!(searchMoviesLoading || searchMoviesError) && (searchMoviesData?.length > 0 ? <FlatList
             data={searchMoviesData}
             numColumns={3}
             keyExtractor={(item) => item?.id?.toString()}
@@ -79,7 +84,7 @@ const Search = () => {
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: (searchMoviesData?.length % 3 === 2) ? 'flex-start' : 'space-between', gap: (searchMoviesData?.length % 3 === 2) ? 7 : 0 }}
-          /> : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Search Results Found</Text>) : null}
+          /> : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Search Results Found</Text>)}
         </View>
       </ScrollView>
     </SafeAreaView>

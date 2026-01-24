@@ -6,7 +6,8 @@ import { localStorage } from '@/services/localStorage';
 import useFetch from '@/services/useFetch';
 import { Images } from '@/utils/images';
 import { LatestMovieData } from '@/utils/interfaces';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,20 +16,24 @@ const Home = () => {
   const { data: latestMoviesData, loading: latestMoviesLoading, error: latestMoviesError } = useFetch(() => fetchLatestMovies(''));
   const [savedMoviesData, setSavedMoviesData] = useState<LatestMovieData[]>([]);
 
-  useEffect(() => {
-    const fetchSavedMovies = async () => {
-      const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
-      setSavedMoviesData(moviesData);
-    };
-    fetchSavedMovies();
-  }, [savedMoviesData]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchSavedMovies = async () => {
+        const moviesData: LatestMovieData[] = await localStorage.getItem('savedMovies') || [];
+        setSavedMoviesData(moviesData);
+      };
+      fetchSavedMovies();
+    }, [])
+  );
 
   const handleToggleIsMovieSaved = async (movieId: number, title: string, bannerUrl: string, rating: number, release_date: string) => {
     if (savedMoviesData?.some((movie) => movie?.id === movieId)) {
       const updatedSavedMoviesData = savedMoviesData?.filter((movie) => movie?.id !== movieId) || [];
+      setSavedMoviesData(updatedSavedMoviesData);
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     } else {
       const updatedSavedMoviesData = [...savedMoviesData, { id: movieId, title, poster_path: bannerUrl, vote_average: rating, release_date }];
+      setSavedMoviesData(updatedSavedMoviesData);
       await localStorage.setItem('savedMovies', updatedSavedMoviesData);
     }
   };
@@ -46,7 +51,7 @@ const Home = () => {
           {popularMoviesLoading && <ActivityIndicator color='#FFFFFF' className='mt-[40px]' />}
           {popularMoviesError && <Text className='text-stellar-rose text-[14px] font-dmSans-medium'>Error: {popularMoviesError?.message}</Text>}
 
-          {!(popularMoviesLoading || popularMoviesError) && (popularMoviesData?.length! > 0) ? (<FlatList
+          {!(popularMoviesLoading || popularMoviesError) && ((popularMoviesData?.length! > 0) ? (<FlatList
             data={popularMoviesData}
             keyExtractor={(item) => item?.movieId?.toString()}
             scrollEnabled={true}
@@ -55,7 +60,7 @@ const Home = () => {
               <PopularMovieCard movieId={item?.movieId} movieIndex={index} title={item?.title} bannerUrl={item?.bannerUrl} rating={item?.rating} genres={item?.genres} />
             )}
             contentContainerStyle={{ paddingLeft: 9, gap: 16 }}
-          />) : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Popular Movies Yet</Text>}
+          />) : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Popular Movies Yet</Text>)}
         </View>
 
         <View className='w-full mt-[30px] px-[16px] pb-[70px] flex flex-col gap-[12px]'>
@@ -63,7 +68,7 @@ const Home = () => {
           {latestMoviesLoading && <ActivityIndicator color='#FFFFFF' className='mt-[80px]' />}
           {latestMoviesError && <Text className='text-stellar-rose text-[14px] font-dmSans-medium'>Error: {latestMoviesError?.message}</Text>}
 
-          {!(latestMoviesLoading || latestMoviesError) && (latestMoviesData?.length > 0) ? (<FlatList
+          {!(latestMoviesLoading || latestMoviesError) && ((latestMoviesData?.length > 0) ? (<FlatList
             data={latestMoviesData}
             numColumns={3}
             keyExtractor={(item) => item?.id?.toString()}
@@ -73,7 +78,7 @@ const Home = () => {
             )}
             contentContainerStyle={{ gap: 14 }}
             columnWrapperStyle={{ justifyContent: 'space-between' }}
-          />) : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Latest Movies Yet</Text>}
+          />) : <Text className='text-lunar-glow text-[12px] font-dmSans-medium'>No Latest Movies Yet</Text>)}
         </View>
       </ScrollView>
     </SafeAreaView>
