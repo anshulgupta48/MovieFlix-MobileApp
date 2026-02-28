@@ -1,9 +1,9 @@
 # MovieFlix — Mobile App
 <img src='./assets/images/logo.png' alt='MovieFlix-Logo' height='45' width='55' />
 
-MovieFlix is a cross-platform mobile application built with **Expo**, **React-Native** and **TypeScript**. It showcases popular and latest movies, allows searching, saving favorites, and viewing detailed movie pages.
+MovieFlix is a cross-platform mobile application built with **Expo**, **React-Native**, **TypeScript**, **Tailwind-CSS ( Nativewind )** and **Appwrite**. It showcases popular and latest movies, allows searching, saving favorites, and viewing detailed movie pages.
 [**Live demo**](#) ( This repo contains the app source — run locally using the steps below. )
-**Tech Stack:** Expo • React-Native • TypeScript • App-Router • Tailwind-CSS ( Nativewind )
+**Tech Stack:** Expo • React-Native • TypeScript • App-Router • Tailwind-CSS ( Nativewind ) • TMDB-API • Appwrite
 
 
 ## 📸 Screenshots
